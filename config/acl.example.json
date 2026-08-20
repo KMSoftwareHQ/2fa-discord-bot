@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "secrets": {
+    "aws-root": {
+      "note": "prod root account — break-glass only",
+      "allowed": ["123456789012345678"]
+    },
+    "github-org": {
+      "note": "org owner account",
+      "allowed": ["123456789012345678", "234567890123456789"]
+    }
+  }
+}

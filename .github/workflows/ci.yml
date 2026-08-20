@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      # better-sqlite3 is a native addon; npm ci builds it from source if no
+      # prebuilt binary matches the runner's Node ABI.
+      - run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Build
+        run: npm run build
+
+      - name: Test
+        run: npm test
+
+      # Guards against personal identifiers, TOTP seeds, master keys, bot
+      # tokens, and real Discord IDs reaching the public repo.
+      # See scripts/check-clean.sh.
+      - name: Check for leaked identifiers
+        run: npm run check:clean

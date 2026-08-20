@@ -1,0 +1,30 @@
+# Dependencies and build output
+node_modules/
+dist/
+
+# Runtime state — never commit. data/ holds vault.db, whose rows are the
+# encrypted TOTP seeds; a copy of it plus a leaked master key is game over.
+data/
+logs/
+run/
+*.db
+*.db-wal
+*.db-shm
+
+# The live allowlist. It maps real Discord user IDs to the accounts they can
+# reach — config/acl.example.json is the tracked template, this is not.
+config/acl.json
+
+# Secrets. .env.example is the tracked template; every other .env is local.
+.env
+.env.*
+!.env.example
+
+# Key-rotation backups (contain ciphertext under the OLD master key)
+backups/
+
+# Editor / misc
+*.bak
+*.log
+*.pid
+.DS_Store

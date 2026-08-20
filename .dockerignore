@@ -1,0 +1,15 @@
+node_modules/
+dist/
+data/
+logs/
+run/
+backups/
+.env
+.env.*
+config/acl.json
+.git/
+.github/
+*.md
+*.db
+*.db-wal
+*.db-shm

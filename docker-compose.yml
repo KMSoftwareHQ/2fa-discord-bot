@@ -1,0 +1,46 @@
+# Template — copy .env.example to .env first.
+#
+# The bot needs no ports and no inbound network: it dials out to Discord's
+# gateway. Everything below is about keeping the vault file and the master key
+# where only this container can reach them.
+
+volumes:
+  vault_data:
+
+services:
+  bot:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+
+    # Run as the host user that owns config/acl.json and the data volume.
+    # The image's default is uid 1000 (node); if your host account is anything
+    # else, the read-only bind mount below is unreadable and the bot fails to
+    # start. Set APP_UID/APP_GID in .env to your `id -u` / `id -g`.
+    # Files the container writes then stay owned by you, which keeps backups
+    # from needing root.
+    user: "${APP_UID:-1000}:${APP_GID:-1000}"
+
+    # The allowlist is bind-mounted from the host, READ-ONLY, so that:
+    #   - editing it on the host takes effect without a rebuild (the bot
+    #     re-reads it when the contents change), and
+    #   - a compromised container cannot grant itself access to more secrets.
+    # The database stays in a named volume; it is the container's to write.
+    volumes:
+      - vault_data:/app/data
+      - ./config/acl.json:/app/config/acl.json:ro
+
+    # Nothing here needs to escalate, write outside the data volume, or hold a
+    # capability. A process that decrypts 2FA seeds is a good place to be strict.
+    read_only: true
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+    tmpfs:
+      - /tmp
+
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
