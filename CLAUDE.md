@@ -44,7 +44,7 @@ scripts/       check-clean.sh (leak guard) + cron supervision set
 ## Commands
 
 ```bash
-npm run build && npm test      # node --test dist
+npm run build && npm test      # node --test "dist/**/*.test.js"
 npm run typecheck
 npm run check:clean            # MUST pass before any commit
 npm run vault -- <cmd>         # genkey|add|list|rm|verify|rotate-key|audit|acl-check
