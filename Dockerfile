@@ -6,7 +6,7 @@
 # devDependencies while KEEPING the compiled .node binary, and copy the pruned
 # node_modules across. Both stages use the same base image so the addon stays
 # ABI-compatible.
-FROM node:20-bookworm-slim AS build
+FROM node:22.23.4-bookworm-slim AS build
 
 WORKDIR /app
 
@@ -22,7 +22,7 @@ COPY src/ src/
 RUN npm run build && npm prune --omit=dev
 
 
-FROM node:20-bookworm-slim
+FROM node:22.23.4-bookworm-slim
 
 WORKDIR /app
 

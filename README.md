@@ -105,7 +105,7 @@ Back the volume up with:
 
 ```bash
 docker run --rm -v 2fa-discord-bot_vault_data:/d -v "$PWD/backups":/b \
-  node:20-bookworm-slim cp /d/vault.db /b/vault.db.$(date +%%F)
+  node:22.23.4-bookworm-slim cp /d/vault.db /b/vault.db.$(date +%%F)
 ```
 
 ## Configuration
